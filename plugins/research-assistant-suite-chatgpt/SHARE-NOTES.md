@@ -69,7 +69,7 @@ filled domain profiles, and source-only runtime state were excluded.
 - Runtime invocation and user acceptance: not established by static package checks.
 
 The package has not been installed into the user's personal Codex marketplace and has not
-been installed into the user's personal Codex marketplace. It was pushed to the public
-GitHub repository https://github.com/WizerdBaChe/research-assistant-suite-chatgpt on
-2026-09-18 at commit 25788b9, with remote default branch main and GitHub license detection
-MIT License.
+been installed into the user's personal Codex marketplace. The full bundle was pushed to
+the public GitHub repository https://github.com/WizerdBaChe/research-assistant-suite-chatgpt
+on 2026-09-18; the bundle landed at 25788b9 and the final publication record is at
+5b148ef on remote default branch main. GitHub license detection is MIT License.
