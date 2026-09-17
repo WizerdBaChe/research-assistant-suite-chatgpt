@@ -1,0 +1,13 @@
+# Local build output and runtime caches
+skill-upload-bundles/
+**/__pycache__/
+*.py[cod]
+
+# Local evidence-run output
+runs-unfiled/
+.lse/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/

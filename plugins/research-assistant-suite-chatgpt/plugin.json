@@ -1,0 +1,46 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "research-assistant-suite-chatgpt",
+  "version": "0.1.0",
+  "description": "One-entry research workflow that combines methodological planning with evidence-traceable literature search in ChatGPT and Codex.",
+  "author": {
+    "name": "WizerdBaChe",
+    "url": "https://github.com/WizerdBaChe"
+  },
+  "homepage": "https://github.com/WizerdBaChe/research-assistant-suite-chatgpt/tree/main/plugins/research-assistant-suite-chatgpt",
+  "repository": "https://github.com/WizerdBaChe/research-assistant-suite-chatgpt",
+  "license": "MIT",
+  "keywords": [
+    "research-workflow",
+    "research-methodology",
+    "literature-search",
+    "evidence",
+    "experimental-design",
+    "chatgpt",
+    "codex"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Research Assistant Suite · ChatGPT/Codex",
+        "shortDescription": "Connect study design with traceable evidence.",
+        "longDescription": "A single-entry research workflow that frames a scientific study, delegates targeted scholarly evidence work, and returns an evidence-aware next-step decision. It keeps methodology and source-search ownership separate and does not invent citations or results.",
+        "developerName": "WizerdBaChe",
+        "category": "Research",
+        "capabilities": [
+          "Research",
+          "Read"
+        ],
+        "websiteURL": "https://github.com/WizerdBaChe/research-assistant-suite-chatgpt",
+        "privacyPolicyURL": "https://github.com/WizerdBaChe/research-assistant-suite-chatgpt/blob/main/PRIVACY.md",
+        "termsOfServiceURL": "https://github.com/WizerdBaChe/research-assistant-suite-chatgpt/blob/main/TERMS.md",
+        "defaultPrompt": [
+          "Find evidence for my study question and recommend the next step.",
+          "Turn this research idea into a literature-backed study plan.",
+          "Compare methods in the literature for my experiment."
+        ],
+        "brandColor": "#7C3AED"
+      }
+    }
+  }
+}
