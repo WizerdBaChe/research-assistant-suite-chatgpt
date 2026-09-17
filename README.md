@@ -3,49 +3,57 @@
 > 中文是預設閱讀版本；English 可在本頁下方展開。
 
 這是 research-assistant-suite-chatgpt 的獨立 public GitHub repository marketplace。
-它提供一個單一入口，將研究方法判讀與可追溯的學術文獻搜尋接成同一個工作流：
+它是一個 self-contained research workflow plugin：使用者只要安裝這一個 plugin，
+就能從研究方法判讀、文獻搜尋與證據擷取，一路完成到 evidence-aware next action。
 
-1. 先定位研究階段、研究決策、方法限制與證據缺口。
-2. 將缺口轉成有界線的 literature request。
-3. 找到並擷取帶有 citation locator、access level、gaps、confidence 與 search trail
-   的證據。
-4. 把證據接回研究決策，輸出可辯護的下一步與仍需人工確認的地方。
+## 一次安裝，三個內部能力
+
+這個 bundle 內含三個 skill：
+
+| 內部能力 | Skill id | 責任 |
+|---|---|---|
+| 綜合入口 | research-assistant-suite | 路由、contract translation、證據到決策的 synthesis |
+| 研究方法 | scientific-research-guide | 研究階段、方法、實驗設計、統計、V&V、UQ |
+| 文獻服務 | literature-search-extract | 學術搜尋、定向擷取、citation traceability |
+
+平常只需要選擇或呼叫 research-assistant-suite。它會在同一個 plugin 內調度另外
+兩個 bundled capability；不需要再安裝或手動呼叫另外兩個 standalone plugin。
 
 ## 這個 plugin 做什麼
 
-- 以一個 research-assistant-suite entry skill 接收「研究決策 + 文獻證據」的複合需求。
-- 將方法學工作交給 scientific-research-guide companion skill。
-- 將來源搜尋與定向擷取交給 literature-search-extract companion skill。
-- 依 decision question 合併兩邊的結果，而不是以 citation count 代替方法判斷。
-- 在結果中保留來源 identifier、access tag、section/table/figure/page locator、conflict、
-  confidence、gaps 與 search trail。
-- 在任一 companion 缺少、來源無法存取或搜尋部分失敗時，回傳明確的 partial result，
-  不以記憶補造 citation、數值或方法結論。
+1. 定位研究階段、研究決策、方法限制與證據缺口。
+2. 將缺口轉成有界線的 literature request。
+3. 找到並擷取帶有 citation locator、access level、gaps、confidence 與 search trail
+   的證據。
+4. 依 decision question 合併方法學 framing 與文獻結果。
+5. 輸出可辯護的 next action、限制、衝突與仍需人工確認的地方。
 
-這是一個 coordination package，不重新打包兩個 companion 的內容。兩個 standalone
-plugin 仍各自維持自己的版本、測試與責任邊界。
+它保留兩個原始能力的責任邊界：研究方法 skill 不會取代來源搜尋的 citation
+verification；文獻 skill 也不會單靠 citation count 替使用者決定研究方法。
 
 ## 不做什麼
 
 - 不把 citation-only request 強行變成研究階段診斷。
 - 不把單純方法問題強行變成 literature sweep。
-- 不宣稱 plugin manifest 具有未經驗證的 cross-plugin hard dependency。
 - 不包含 credentials、私人 research corpus、Claude hooks、local services 或工作站設定。
 - 不替使用者執行未明確要求的 code、data、experiment、file edit 或研究決策。
+- 不會因為某個來源無法存取，就以記憶補造 citation、數值或方法結論。
 
-## Companion plugins
+## 與 standalone packages 的關係
 
-複合工作流建議同時安裝以下兩個 companion：
+本 bundle 內的兩份 companion payload 是經審查後納入的 release snapshots：
 
-| Capability | Plugin package | Skill id |
-|---|---|---|
-| 研究階段、方法、實驗設計、統計、V&V | scientific-research-guide-chatgpt | scientific-research-guide |
-| 學術搜尋、定向擷取、citation traceability | literature-search-chatgpt | literature-search-extract |
+- scientific-research-guide-chatgpt：
+  https://github.com/WizerdBaChe/scientific-research-guide-chatgpt
+- literature-search-chatgpt：
+  https://github.com/WizerdBaChe/literature-search-chatgpt
 
-目前的 manifest schema 沒有在本 package 內宣稱可直接解析的 cross-plugin dependency
-欄位，因此 companion installation 是文件化的 runtime prerequisite，而不是未驗證的
-manifest 宣告。若只載入本 suite，skill 仍會分解請求，但會把缺少的 lane 標成
-unavailable，只交付有實際能力支援的 partial result。
+這兩個 standalone repository 仍可獨立安裝，適合只需要單一能力的情況；但如果
+使用 full bundle，請不要再同時安裝 standalone copies。相同 skill IDs 同時存在
+於多個 plugin 時，可能造成 duplicate discovery 或 routing ambiguity。
+
+Bundle 內的 snapshots 不會隨 standalone repository 自動更新；每次同步都應更新
+bundle 版本、SHARE-NOTES provenance 與相容性驗證。
 
 ## Package 結構
 
@@ -63,9 +71,21 @@ unavailable，只交付有實際能力支援的 partial result。
     ├── LICENSE
     ├── README.md
     ├── SHARE-NOTES.md
-    └── skills/research-assistant-suite/
-        ├── SKILL.md
-        └── references/orchestration-contract.md
+    └── skills/
+        ├── research-assistant-suite/
+        │   ├── SKILL.md
+        │   └── references/orchestration-contract.md
+        ├── scientific-research-guide/
+        │   ├── SKILL.md
+        │   ├── domains/
+        │   └── references/
+        └── literature-search-extract/
+            ├── SKILL.md
+            ├── connectors/
+            ├── loop/
+            ├── references/
+            ├── scripts/
+            └── verify/
 ~~~
 
 Portable root plugin.json 是 package 的 canonical manifest；.codex-plugin/plugin.json
@@ -83,40 +103,27 @@ Path: .agents/plugins
 Branch: main
 ~~~
 
-匯入後安裝 Research Assistant Suite · ChatGPT/Codex，並另外安裝兩個 companion
-plugin，再開一個新的 chat。使用時可按 + → More 選 suite，或直接以 @ 選取它。
-
-GitHub repository marketplace、ChatGPT workspace marketplace 與 OpenAI universal Plugins
-Directory 是不同的 discovery surface。GitHub source distribution 不會自動使 plugin
-出現在 universal Directory；若要提交官方目錄，仍需依該目錄的 skills-only review
-流程提供 publisher、support、privacy、terms、starter prompts 與測試案例。
+匯入後只安裝 Research Assistant Suite · ChatGPT/Codex，再開一個新的 chat。使用時
+可按 + → More 選 suite，或直接以 @ 選取它。
 
 ## Codex
 
-在 PowerShell 執行：
+只需要加入這一個 repository marketplace：
 
 ~~~powershell
-codex plugin marketplace add WizerdBaChe/scientific-research-guide-chatgpt --ref main --sparse .agents/plugins --sparse plugins
-codex plugin add scientific-research-guide-chatgpt@scientific-research-guide-chatgpt
-codex plugin marketplace add WizerdBaChe/literature-search-chatgpt --ref main --sparse .agents/plugins --sparse plugins
-codex plugin add literature-search-chatgpt@literature-search-chatgpt
 codex plugin marketplace add WizerdBaChe/research-assistant-suite-chatgpt --ref main --sparse .agents/plugins --sparse plugins
 codex plugin add research-assistant-suite-chatgpt@research-assistant-suite-chatgpt
 codex plugin list
 ~~~
 
-更新時，分別升級三個 local marketplace，再重新加入對應 plugin：
+更新時：
 
 ~~~powershell
-codex plugin marketplace upgrade scientific-research-guide-chatgpt
-codex plugin add scientific-research-guide-chatgpt@scientific-research-guide-chatgpt
-codex plugin marketplace upgrade literature-search-chatgpt
-codex plugin add literature-search-chatgpt@literature-search-chatgpt
 codex plugin marketplace upgrade research-assistant-suite-chatgpt
 codex plugin add research-assistant-suite-chatgpt@research-assistant-suite-chatgpt
 ~~~
 
-完成後重新開啟 Codex，並用新的 task/thread 測試，讓新的 skill catalog 被重新發現。
+完成後重新開啟 Codex，並用新的 task/thread 測試，讓 bundled skills 被重新發現。
 
 ## 使用範例
 
@@ -132,20 +139,21 @@ DOI 以及 table、figure 或 section locator；找不到的地方請列成 gap�
 建議哪一個適合先做。不要把 abstract-only 證據當成完整 Methods 證據。
 ~~~
 
-以下需求則應直接選 companion：
+如果只需要單一能力，也可以明確指定 bundled skill id：
 
-- 只要找論文、查 DOI、抽 Methods 或整理 evidence table → literature-search-extract
-- 只要設計實驗、選統計檢定、做 V&V 或判斷研究下一步 → scientific-research-guide
+- 只找論文、查 DOI、抽 Methods 或整理 evidence table → literature-search-extract
+- 只設計實驗、選統計檢定、做 V&V 或判斷研究下一步 → scientific-research-guide
 
 ## Runtime 與資料邊界
 
-這是 instructions-only 的 coordination package，不提供遠端服務。Host 仍須提供
-兩個 companion skill 與可用的 web search/page-fetch 或使用者提供的來源，才能完成
-完整的 evidence lane。
+這是 instructions + reviewed helper payloads 的 self-contained package，不提供遠端
+服務。完整 evidence lane 仍需要 host 提供 web search/page-fetch 或使用者提供的
+來源；bundled skill 需要的 local evidence-run scripts 只在使用者明確要求且 host
+允許時寫入 project-local 路徑。
 
-如果 literature lane 不可用，suite 會交付方法學 framing、精確的 evidence request
-與 gap，但不會把記憶中的文獻主張包裝成 current evidence。如果 methodology lane
-不可用，suite 會交付來源結果與限制，但不會擅自給出研究方法 verdict。
+如果 host 無法載入 literature lane，suite 會交付方法學 framing、精確的 evidence
+request 與 gap，但不會把記憶中的文獻主張包裝成 current evidence。如果 host 無法
+載入 methodology lane，suite 會交付來源結果與限制，但不會擅自給出研究方法 verdict。
 
 - [Privacy](PRIVACY.md)
 - [Terms](TERMS.md)
@@ -161,23 +169,22 @@ MIT。root 與 plugin package 各自附有同一份 [LICENSE](LICENSE)。
 
 ### What this repository is
 
-This is the standalone public repository marketplace for
-research-assistant-suite-chatgpt. It provides one orchestration entry point that connects
-methodology-first study framing with evidence-traceable scholarly search and extraction.
+This is the standalone public repository marketplace for research-assistant-suite-chatgpt.
+It is a self-contained bundle with one user-facing orchestration entry point and the
+reviewed scientific-research-guide and literature-search-extract capability payloads.
 
-### Companion boundary
+### Installation model
 
-The suite keeps scientific-research-guide responsible for research-stage diagnosis,
-method selection, controls, validation, and uncertainty. It keeps literature-search-extract
-responsible for source discovery, targeted extraction, access tags, locators, support
-checks, gaps, confidence, and search trails. The suite joins the two returns by decision
-question and exposes partial capability status.
+Install this plugin only for the complete workflow. The two standalone repositories remain
+available for single-capability installations, but co-installing them with the bundle can
+create duplicate skill IDs and ambiguous routing.
 
-The package does not duplicate either companion payload and does not declare an
-unverified cross-plugin dependency in its manifest. Install the two companion packages
-when the combined workflow is needed.
+The suite frames the study decision, translates evidence gaps into a bounded literature
+request, consumes traceable findings, and returns a decision map with source locators,
+access levels, confidence, conflicts, gaps, and verification status. It does not invent
+citations, results, or methodological certainty.
 
 See the Chinese sections above for ChatGPT Web, Codex, usage, runtime, privacy, support,
-and fallback guidance.
+and snapshot-update guidance.
 
 </details>

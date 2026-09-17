@@ -1,0 +1,6 @@
+{
+  "schema": "literature-search-extract/connectors@1",
+  "owner_skill": "literature-search-extract",
+  "note": "No local corpus or private service connector is registered in the public package. Use host web search/page fetch or user-provided sources; an empty local registry is not evidence that the literature is absent.",
+  "connectors": []
+}

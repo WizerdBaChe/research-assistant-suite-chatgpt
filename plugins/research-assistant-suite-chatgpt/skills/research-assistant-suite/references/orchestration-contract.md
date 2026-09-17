@@ -1,8 +1,10 @@
 # Research Assistant Suite orchestration contract
 
-This contract is the seam between the two companion skills and the suite coordinator.
-Field names are intentionally close to the existing service contracts so a host can pass
-the return without an ad hoc translation layer.
+This contract is the seam between the two bundled companion skills and the suite
+coordinator. The full package carries those skills under sibling directories, while this
+document defines the one-entry routing and join behavior. Field names are intentionally
+close to the existing service contracts so the coordinator can pass returns without an ad
+hoc translation layer.
 
 ## Ownership
 

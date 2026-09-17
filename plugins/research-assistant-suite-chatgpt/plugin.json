@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "research-assistant-suite-chatgpt",
-  "version": "0.1.0",
-  "description": "One-entry research workflow that combines methodological planning with evidence-traceable literature search in ChatGPT and Codex.",
+  "version": "0.2.0",
+  "description": "Self-contained research workflow bundle combining methodological planning with evidence-traceable literature search in ChatGPT and Codex.",
   "author": {
     "name": "WizerdBaChe",
     "url": "https://github.com/WizerdBaChe"
@@ -12,6 +12,7 @@
   "license": "MIT",
   "keywords": [
     "research-workflow",
+    "research-assistant",
     "research-methodology",
     "literature-search",
     "evidence",
@@ -24,7 +25,7 @@
       "interface": {
         "displayName": "Research Assistant Suite · ChatGPT/Codex",
         "shortDescription": "Connect study design with traceable evidence.",
-        "longDescription": "A single-entry research workflow that frames a scientific study, delegates targeted scholarly evidence work, and returns an evidence-aware next-step decision. It keeps methodology and source-search ownership separate and does not invent citations or results.",
+        "longDescription": "A self-contained single-entry research workflow that frames a scientific study, runs targeted scholarly evidence work, and returns an evidence-aware next-step decision. It bundles the methodology and literature capabilities while keeping their ownership boundaries explicit.",
         "developerName": "WizerdBaChe",
         "category": "Research",
         "capabilities": [

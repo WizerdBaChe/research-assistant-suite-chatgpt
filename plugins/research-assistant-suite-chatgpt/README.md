@@ -1,6 +1,7 @@
 # Research Assistant Suite · ChatGPT/Codex
 
-這個目錄是 research-assistant-suite-chatgpt plugin 的 package root。
+這個目錄是 research-assistant-suite-chatgpt plugin 的 package root，也是 self-contained
+bundle 的發行邊界。
 
 它提供一個 research-assistant-suite entry skill，將兩個獨立 capability 接成一次
 使用者請求可完成的研究工作流：
@@ -10,6 +11,9 @@
 - literature-search-extract：學術來源搜尋、定向擷取、access tag、citation
   locator、support check、confidence、gaps 與 search trail。
 
+這兩份 companion payload 已經完整放在同一個 plugin 的 sibling skill directories；
+使用者只需要安裝這一個 plugin，平常呼叫 research-assistant-suite 即可。
+
 ## Runtime contract
 
 Suite 先產生 methodology framing，再將 evidence_questions 與 verification_needs
@@ -17,14 +21,14 @@ Suite 先產生 methodology framing，再將 evidence_questions 與 verification
 詳細欄位與 worked envelope 見
 [orchestration-contract.md](skills/research-assistant-suite/references/orchestration-contract.md)。
 
-這個 package 不複製兩個 companion 的 payload，也不在 manifest 宣稱未經 host schema
-確認的 cross-plugin hard dependency。完整工作流需要另外安裝：
+這個 package 不宣稱未經 host schema 確認的 cross-plugin hard dependency，因為兩個
+companion 已經是 bundle 內的實際 payload。若 host 無法載入其中一個 bundled
+capability，SKILL.md 要求回傳 capability status 與 partial result，不得把未驗證
+主張當成已完成的 lane。
 
-- scientific-research-guide-chatgpt
-- literature-search-chatgpt
-
-若其中一個不可用，SKILL.md 要求回傳 capability status 與 partial result，不得把
-未驗證主張當成已完成的 lane。
+若使用者已經安裝 standalone scientific-research-guide-chatgpt 或
+literature-search-chatgpt，啟用 full bundle 時應停用或移除 standalone copy，以免
+相同 skill IDs 被多個 plugin 同時發現。
 
 ## Scope
 
@@ -37,6 +41,8 @@ Suite 先產生 methodology framing，再將 evidence_questions 與 verification
 
 - [SKILL.md](skills/research-assistant-suite/SKILL.md)：orchestration routing and operating protocol。
 - [orchestration-contract.md](skills/research-assistant-suite/references/orchestration-contract.md)：request/result/join schemas。
+- [scientific-research-guide/SKILL.md](skills/scientific-research-guide/SKILL.md)：bundled methodology capability。
+- [literature-search-extract/SKILL.md](skills/literature-search-extract/SKILL.md)：bundled literature capability。
 - [SHARE-NOTES.md](SHARE-NOTES.md)：package provenance、相容性與驗證紀錄。
 
 MIT license。見 [package LICENSE](LICENSE) 與 repository root 的 privacy、terms、support

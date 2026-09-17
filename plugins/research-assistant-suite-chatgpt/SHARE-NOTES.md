@@ -2,33 +2,42 @@
 
 ## Boundary
 
-This is the public distribution package for a coordination-only OpenAI ChatGPT/Codex
-plugin. It is deliberately separate from both standalone companion repositories and
-does not vendor either companion skill payload.
+This is the public distribution package for a self-contained OpenAI ChatGPT/Codex
+research workflow bundle. It contains one orchestration skill plus reviewed snapshots of
+the scientific-research-guide and literature-search-extract capability payloads.
 
-The entry skill is research-assistant-suite. The companion skill IDs it addresses are
+The entry skill is research-assistant-suite. The bundled companion skill IDs are
 scientific-research-guide and literature-search-extract.
 
-## Source and design basis
+## Source snapshots
 
-- The methodology lane follows the standalone scientific-research-guide-chatgpt
-  package's existing five-gate advisory boundary and its Mode 2 literature delegation.
-- The literature lane follows the standalone literature-search-chatgpt package's
-  request/result contract: purpose, question, source_types, scope, output_format, depth,
-  language → findings, sources, gaps, confidence, search_trail, run_id.
-- The suite adds only routing, contract translation, capability-status reporting, and
-  decision-question synthesis.
+- Methodology payload: the reviewed scientific-research-guide-chatgpt package snapshot,
+  based on the share source anchor 7548f0e.
+- Literature payload: the reviewed literature-search-chatgpt package at source commit
+  29f902e.
+- Orchestration payload: authored in this repository and joined through
+  references/orchestration-contract.md.
+
+The bundle carries 51 skill files: 2 orchestration files, 10 methodology files, and
+39 literature-service files. Python bytecode, caches, private corpora, credentials,
+filled domain profiles, and source-only runtime state were excluded.
 
 ## Portability decisions
 
-- Kept one public trigger for the combined workflow to avoid two independent descriptions
-  being selected without an explicit orchestration path.
-- Kept pure-literature and pure-methodology requests out of the suite trigger boundary.
-- Used a thin coordinator instead of copying both payloads; the standalone packages remain
-  the canonical owners of their respective rules.
-- Did not add an unverified cross-plugin dependency field to either manifest. Companion
-  availability is documented and exposed in the return envelope.
-- Added degraded-operation rules for missing, partial, or blocked companion lanes.
+- Kept one public suite trigger for the combined workflow.
+- Kept pure-literature and pure-methodology routing available through the two bundled
+  capability IDs without forcing a combined diagnosis.
+- Converted the previous thin coordinator into a full bundle so the end user installs
+  one plugin.
+- Kept the standalone repositories as independent distribution variants and did not add
+  an unverified cross-plugin dependency field to the bundle manifest.
+- Warned against co-installing standalone copies with the bundle because the same skill IDs
+  would be discovered more than once.
+- Adapted bundled companion frontmatter, one illustrative directory path, and one blank
+  list marker with trailing whitespace to the
+  bundle layout; the remaining reviewed payload content is copied from the standalone
+  packages.
+- Kept degraded-operation rules for a host that fails to load one internal capability.
 - Kept the final output traceable by decision question, source key, locator, access level,
   confidence, conflict, gap, and search trail.
 
@@ -36,23 +45,28 @@ scientific-research-guide and literature-search-extract.
 
 - Two manifests: portable root plugin.json and .codex-plugin/plugin.json fallback.
 - One repo-local marketplace entry.
-- One orchestration skill and one field-level contract reference.
+- Three skill directories: research-assistant-suite, scientific-research-guide, and
+  literature-search-extract.
+- The complete literature helper/reference/test payload and the generic methodology
+  reference/template payload.
 - Root and package-level MIT license files plus privacy, terms, support, and security pages.
 
 ## Verification record
 
-2026-09-18 local package checks:
+2026-09-18 local package checks after full-bundle conversion:
 
-- quick_validate.py: PASS.
+- quick_validate.py: PASS for all three bundled skills.
 - validate_plugin.py: PASS.
 - read_marketplace_name.py: PASS; the repo-local marketplace name matches the plugin name.
-- Portable/Codex manifest consistency: PASS.
-- Markdown local-link closure: PASS (14 links checked).
-- Packaging prescan: CLEAN (regex pass; manual review remains required).
+- Portable/Codex manifest consistency: PASS; version 0.2.0 and interface fields agree.
+- Markdown local-link closure: PASS (16 links checked).
+- Packaging prescan: CLEAN for all three bundled skills (regex pass; manual review still
+  required).
+- Payload copy audit: PASS; scientific 10 files with three intentional adapter deltas and
+  literature 39 files with one intentional adapter delta.
+- Literature helper tests: PASS (49 tests).
 - Public-boundary scan: CLEAN.
-- Payload audit: PASS; only the coordinator skill and contract are shipped, with no
-  companion payload copy.
-- Companion runtime invocation and user acceptance: not established by static package checks.
+- Runtime invocation and user acceptance: not established by static package checks.
 
 The package has not been installed into the user's personal Codex marketplace and has not
 been pushed to GitHub in this task.

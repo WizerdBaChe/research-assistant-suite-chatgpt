@@ -7,9 +7,10 @@ description: >-
   methodology decision with a literature/evidence task, such as 「找文獻後幫我決定下一步」
   or 「比較文獻中的方法並替我的實驗選擇檢查項目」. Delegate methodology framing to
   scientific-research-guide and source search/extraction to literature-search-extract
-  when those companion skills are available. NOT for pure citation retrieval or pure
-  methodology advice. Target runtime: ChatGPT/Codex; if a companion capability is
-  unavailable, state the gap and return only the supported partial result.
+  because both companion skills are bundled in this plugin. NOT for pure citation
+  retrieval or pure methodology advice. Target runtime: ChatGPT/Codex; if the host
+  cannot load an internal capability, state the gap and return only the supported
+  partial result.
 ---
 
 # Research Assistant Suite
@@ -20,8 +21,8 @@ This is a single-entry orchestration skill for the combined workflow:
 2. turn the unresolved evidence questions into a bounded scholarly-search request;
 3. return a traceable synthesis that says what the evidence changes about the next step.
 
-The suite is an orchestrator, not a replacement for either companion skill. It must keep
-the ownership boundary explicit:
+The suite is an orchestrator inside a self-contained bundle, not a replacement for the
+companion skills. It must keep the ownership boundary explicit:
 
 - scientific-research-guide owns research-stage diagnosis, tier mapping, method choice,
   assumptions, controls, validation, uncertainty, and methodological judgement;
@@ -30,9 +31,14 @@ the ownership boundary explicit:
 - research-assistant-suite owns routing, contract translation, and the final
   evidence-to-decision synthesis.
 
-Do not copy or silently reimplement the companions' domain rules. If a companion is not
-available in the host, report that capability as unavailable rather than pretending that
-the dispatch happened.
+The bundled payloads live in the sibling skill directories scientific-research-guide and
+literature-search-extract. A user should normally install this full bundle only and invoke
+research-assistant-suite; installing the two standalone packages at the same time can
+create duplicate skill IDs and ambiguous routing.
+
+Do not silently reimplement the companions' domain rules in the coordinator. If the host
+cannot load a bundled capability, report that capability as unavailable rather than
+pretending that the dispatch happened.
 
 ## Trigger boundary
 
@@ -76,8 +82,8 @@ The combined result must keep these evidence classes separate:
 - assumed or still requiring user confirmation.
 
 Never invent a citation, DOI, numeric value, method result, access level, or verification
-status. A missing companion, blocked source, or failed search is a gap in the result, not
-permission to fill it from memory.
+status. A missing internal capability, blocked source, or failed search is a gap in the
+result, not permission to fill it from memory.
 
 ## Orchestration loop
 
@@ -101,8 +107,8 @@ file without explicit consent.
 
 ### Phase 1 — Methodology framing
 
-Send a structured request to scientific-research-guide when available. The request
-should include:
+Send a structured request to the bundled scientific-research-guide capability. The
+request should include:
 
 ~~~
 purpose:        the study decision the user needs to make
@@ -135,9 +141,9 @@ and any user choices that it says must be confirmed.
 
 ### Phase 2 — Targeted literature service
 
-Translate only evidence_questions and verification_needs into a Mode 2 request for
-literature-search-extract when available. Use the companion's field names so the return
-remains machine-readable:
+Translate only evidence_questions and verification_needs into a Mode 2 request for the
+bundled literature-search-extract capability. Use the companion's field names so the
+return remains machine-readable:
 
 ~~~
 purpose:        how the evidence will affect the study decision
@@ -208,7 +214,7 @@ If the user requests code, data analysis, file edits, or another action, apply t
 methodology companion's consent and verification rules before acting. The suite does not
 gain permission merely because a literature search was requested.
 
-## Degraded operation
+## Runtime degradation
 
 The result must expose capability status:
 
@@ -218,13 +224,13 @@ literature_status:  available | unavailable | partial
 synthesis_status:   complete | partial | blocked
 ~~~
 
-If scientific-research-guide is unavailable:
+If the bundled scientific-research-guide capability cannot be loaded:
 
 - do not make an unsupported methodological recommendation;
 - return the literature result, if available, as evidence only;
 - list the missing study-decision framing needed before a method verdict.
 
-If literature-search-extract is unavailable:
+If the bundled literature-search-extract capability cannot be loaded:
 
 - return the methodology framing and a precise evidence request/gap;
 - do not present remembered or unverified scholarly claims as current evidence;
@@ -241,16 +247,16 @@ provide only a request decomposition, not a fabricated research answer.
 | Plan or validate the user's study only | scientific-research-guide | Do not force a literature sweep |
 | Use literature to choose the user's next study action | Both companions | Run Phases 0–3 |
 | User supplies papers and asks what they imply for a design | Both, with supplied sources as seeds | Keep supplied vs discovered sources distinct |
-| No usable source access or companion | Partial result | Name the gap and preserve the unfinished contract |
+| No usable source access or internal capability | Partial result | Name the gap and preserve the unfinished contract |
 
 ## Reference map
 
 - references/orchestration-contract.md — field-level request/result schemas, join keys,
   status values, and a worked combined return.
-- The installed scientific-research-guide skill — authoritative methodology framing,
-  tier framework, domain routing, method-selection criteria, and action boundary.
-- The installed literature-search-extract skill — authoritative search, extraction,
-  access tagging, locator, support-span, confidence, and search-trail rules.
+- The bundled scientific-research-guide skill — authoritative methodology framing, tier
+  framework, domain routing, method-selection criteria, and action boundary.
+- The bundled literature-search-extract skill — authoritative search, extraction, access
+  tagging, locator, support-span, confidence, and search-trail rules.
 
-The suite package does not ship a second copy of either companion's payload. Keep the
-companion package versions and availability visible in the verification record.
+The suite package ships reviewed snapshots of both companion payloads. Keep their source
+commit or package version visible in the verification record when refreshing the bundle.
