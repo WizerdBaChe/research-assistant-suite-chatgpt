@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — 2026-09-18
+
+- Expanded the repository README to mirror the multi-surface marketplace guide used by the
+  12-workflow public package.
+- Documented universal-directory, ChatGPT workspace marketplace, Codex repository marketplace,
+  and individual `.skill` upload paths for the three bundled workflows.
+- Clarified that the full bundle is one installable plugin with three discoverable skill IDs.
+- Normalized local and remote publication to a clean `main`-only branch state.
+
 ## 0.2.0 — 2026-09-18
 
 - Converted the coordination package into a self-contained full bundle.

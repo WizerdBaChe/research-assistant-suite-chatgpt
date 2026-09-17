@@ -67,9 +67,12 @@ filled domain profiles, and source-only runtime state were excluded.
 - Literature helper tests: PASS (49 tests).
 - Public-boundary scan: CLEAN.
 - Runtime invocation and user acceptance: not established by static package checks.
+- Repository marketplace README: PASS; documents universal-directory, ChatGPT workspace,
+  Codex marketplace, and individual `.skill` upload surfaces, with the one-plugin/three-skill
+  boundary kept explicit.
+- Branch publication state: local and remote expose only the clean `main` branch.
 
-The package has not been installed into the user's personal Codex marketplace and has not
-been installed into the user's personal Codex marketplace. The full bundle was pushed to
-the public GitHub repository https://github.com/WizerdBaChe/research-assistant-suite-chatgpt
-on 2026-09-18; the bundle landed at 25788b9 and the final publication record is at
-5b148ef on remote default branch main. GitHub license detection is MIT License.
+The package has not been installed into the user's personal Codex marketplace. The full bundle
+and repository marketplace guide were pushed to the public GitHub repository
+https://github.com/WizerdBaChe/research-assistant-suite-chatgpt on 2026-09-18, with remote
+default branch `main`. GitHub license detection is MIT License.
